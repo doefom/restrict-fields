@@ -1,0 +1,19 @@
+{
+    "name": "doefom/restrict-fields",
+    "autoload": {
+        "psr-4": {
+            "Doefom\\RestrictFields\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Restrict Fields",
+            "description": "Restrict Fields addon"
+        },
+        "laravel": {
+            "providers": [
+                "Doefom\\RestrictFields\\ServiceProvider"
+            ]
+        }
+    }
+}
