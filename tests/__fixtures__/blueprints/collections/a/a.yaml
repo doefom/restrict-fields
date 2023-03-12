@@ -1,0 +1,51 @@
+title: A
+sections:
+  main:
+    display: Main
+    fields:
+      -
+        handle: title
+        field:
+          type: text
+          required: true
+          validate:
+            - required
+      -
+        handle: test
+        field:
+          type: text
+          required: true
+      -
+        handle: rating
+        field:
+          input_type: text
+          antlers: false
+          restrictions:
+            -
+              id: lf5lgumv
+              restrict_visibility: hidden
+              restrict_for_roles:
+                - a
+              type: restriction
+              enabled: true
+            -
+              id: lf5lh6cj
+              restrict_visibility: read_only
+              restrict_for_roles:
+                - b
+              type: restriction
+              enabled: true
+          display: Rating
+          type: text
+          icon: text
+          listable: hidden
+          instructions_position: above
+          visibility: visible
+  sidebar:
+    display: Sidebar
+    fields:
+      -
+        handle: slug
+        field:
+          type: slug
+          localizable: true

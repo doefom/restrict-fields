@@ -5,6 +5,19 @@
             "Doefom\\RestrictFields\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Doefom\\RestrictFields\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "statamic/cms": "3.2.* || 3.3.* || 3.4.*"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.5.1",
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^7.0"
+    },
     "extra": {
         "statamic": {
             "name": "Restrict Fields",
@@ -14,6 +27,11 @@
             "providers": [
                 "Doefom\\RestrictFields\\ServiceProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
         }
     }
 }
