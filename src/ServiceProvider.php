@@ -5,62 +5,24 @@ namespace Doefom\RestrictFields;
 use Doefom\RestrictFields\Listeners\RestrictFields;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\Role;
-use Statamic\Forms\Form;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $publishAfterInstall = false;
 
     protected $listen = [
         EntryBlueprintFound::class => [RestrictFields::class]
     ];
 
+    public function register()
+    {
+        $this->registerConfig();
+    }
+
     public function bootAddon()
     {
-        // TODO: Make field types configurable in config.
-        $fieldTypes = [
-            \Statamic\Fieldtypes\Arr::class,
-            \Statamic\Fieldtypes\Assets\Assets::class,
-            \Statamic\Fieldtypes\Bard::class,
-            \Statamic\Fieldtypes\ButtonGroup::class,
-            \Statamic\Fieldtypes\Checkboxes::class,
-            \Statamic\Fieldtypes\Code::class,
-            \Statamic\Fieldtypes\Collections::class,
-            \Statamic\Fieldtypes\Color::class,
-            \Statamic\Fieldtypes\Date::class,
-            \Statamic\Fieldtypes\Entries::class,
-            // TODO: \Statamic\Fieldtypes\Form::class,
-            \Statamic\Fieldtypes\Grid::class,
-            \Statamic\Fieldtypes\Hidden::class,
-            \Statamic\Fieldtypes\Html::class,
-            \Statamic\Fieldtypes\Integer::class,
-            \Statamic\Fieldtypes\Link::class,
-            \Statamic\Fieldtypes\Lists::class,
-            \Statamic\Fieldtypes\Markdown::class,
-            \Statamic\Fieldtypes\Radio::class,
-            \Statamic\Fieldtypes\Range::class,
-            \Statamic\Fieldtypes\Replicator::class,
-            \Statamic\Fieldtypes\Revealer::class,
-            \Statamic\Fieldtypes\Section::class,
-            \Statamic\Fieldtypes\Select::class,
-            \Statamic\Fieldtypes\Sites::class,
-            \Statamic\Fieldtypes\Slug::class,
-            \Statamic\Fieldtypes\Structures::class,
-            \Statamic\Fieldtypes\Table::class,
-            // TODO: \Statamic\Fieldtypes\Tags::class,
-            \Statamic\Fieldtypes\Taxonomies::class,
-            \Statamic\Fieldtypes\Template::class,
-            \Statamic\Fieldtypes\Terms::class,
-            \Statamic\Fieldtypes\Text::class,
-            \Statamic\Fieldtypes\Textarea::class,
-            \Statamic\Fieldtypes\Time::class,
-            \Statamic\Fieldtypes\Toggle::class,
-            \Statamic\Fieldtypes\UserGroups::class,
-            \Statamic\Fieldtypes\UserRoles::class,
-            \Statamic\Fieldtypes\Users::class,
-            \Statamic\Fieldtypes\Video::class,
-            \Statamic\Fieldtypes\Yaml::class,
-        ];
+        $fieldTypes = config('restrict_fields.field_types');
 
         $roles = Role::all()->map(fn(\Statamic\Contracts\Auth\Role $role) => $role->handle());
         $configField = [
@@ -132,4 +94,14 @@ class ServiceProvider extends AddonServiceProvider
             $fieldType::appendConfigField($configFieldHandle, $configField);
         }
     }
+
+    private function registerConfig()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/restrict_fields.php', 'restrict_fields');
+
+        $this->publishes([
+            __DIR__ . '/../config/restrict_fields.php' => config_path('restrict_fields.php'),
+        ], 'restrict-fields');
+    }
+
 }
