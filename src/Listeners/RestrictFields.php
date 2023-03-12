@@ -42,7 +42,8 @@ class RestrictFields
     private function hasRestrictionsForUser(array $item, \Statamic\Contracts\Auth\User $user): bool
     {
         $restrictions = Arr::get($item, 'field.restrictions');
-        $restrictedRoles = collect($restrictions)
+        $restrictions = collect($restrictions)->filter(fn(array $restriction) => $restriction['enabled'] === true);
+        $restrictedRoles = $restrictions
             ->pluck('restrict_for_roles')
             ->flatten();
         // Return true if user has at least on of the roles restricted. Else return false.
