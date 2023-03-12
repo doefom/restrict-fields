@@ -11,12 +11,7 @@ sections:
           validate:
             - required
       -
-        handle: test
-        field:
-          type: text
-          required: true
-      -
-        handle: rating
+        handle: test_field
         field:
           input_type: text
           antlers: false

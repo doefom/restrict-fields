@@ -2,7 +2,9 @@
 
 namespace Doefom\RestrictFields\Tests;
 
+use Doefom\RestrictFields\Listeners\RestrictFields;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Statamic\Events\EntryBlueprintFound;
 use Statamic\Extend\Manifest;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
@@ -119,6 +121,18 @@ abstract class TestCase extends OrchestraTestCase
         $blueprint->save();
 
         return $blueprint;
+    }
+
+    /**
+     * Dispatch an EntryBlueprintFound event with blueprintA and entryAUserA.
+     * @return EntryBlueprintFound
+     */
+    public function dispatchEventEntryA()
+    {
+        $event = new EntryBlueprintFound($this->blueprintA, $this->entryAUserA);
+        (new RestrictFields())->handle($event);
+
+        return $event;
     }
 
     /**

@@ -2,9 +2,7 @@
 
 namespace Doefom\RestrictFields\Tests\Feature;
 
-use Doefom\RestrictFields\Listeners\RestrictFields;
 use Doefom\RestrictFields\Tests\TestCase;
-use Statamic\Events\EntryBlueprintFound;
 
 class RestrictVisibilityHiddenTest extends TestCase
 {
@@ -16,10 +14,8 @@ class RestrictVisibilityHiddenTest extends TestCase
 
         $event = $this->dispatchEventEntryA();
 
-        // Assert there are no fields with the handle 'rating'
-        $this->assertFalse(
-            $event->blueprint->fields()->items()->some(fn(array $item) => $item['handle'] === 'rating')
-        );
+        // Assert there is no field 'test_field'
+        $this->assertNull($event->blueprint->field('test_field'));
     }
 
     /** @test */
@@ -29,10 +25,8 @@ class RestrictVisibilityHiddenTest extends TestCase
 
         $event = $this->dispatchEventEntryA();
 
-        // Assert there still is a field with the handle 'rating'
-        $this->assertTrue(
-            $event->blueprint->fields()->items()->some(fn(array $item) => $item['handle'] === 'rating')
-        );
+        // Assert there still is a field 'test_field'
+        $this->assertNotNull($event->blueprint->field('test_field'));
     }
 
     /** @test */
@@ -42,18 +36,8 @@ class RestrictVisibilityHiddenTest extends TestCase
 
         $event = $this->dispatchEventEntryA();
 
-        // Assert there still is a field with the handle 'rating'
-        $this->assertTrue(
-            $event->blueprint->fields()->items()->some(fn(array $item) => $item['handle'] === 'rating')
-        );
-    }
-
-    private function dispatchEventEntryA()
-    {
-        $event = new EntryBlueprintFound($this->blueprintA, $this->entryAUserA);
-        (new RestrictFields())->handle($event);
-
-        return $event;
+        // Assert there still is a field 'test_field'
+        $this->assertNotNull($event->blueprint->field('test_field'));
     }
 
 }
