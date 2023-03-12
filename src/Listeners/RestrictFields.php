@@ -54,7 +54,7 @@ class RestrictFields
     private function applyRestrictions(Collection $items, Blueprint $blueprint)
     {
         foreach ($items as $item) {
-            $restrictions = Arr::get($item, 'field.restrictions');
+            $restrictions = $this->getRestrictionsForCurrentUser($item);
             foreach ($restrictions as $restriction) {
                 $type = Arr::get($restriction, 'restrict_visibility');
                 if ($type === 'read_only') {
@@ -92,6 +92,15 @@ class RestrictFields
     private function applyHiddenRestriction(array $item, Blueprint $blueprint)
     {
         $blueprint->removeField(Arr::get($item, 'handle'));
+    }
+
+    private function getRestrictionsForCurrentUser(array $item): Collection
+    {
+        $restrictions = collect(Arr::get($item, 'field.restrictions'));
+        return $restrictions->filter(function (array $restriction) {
+            $restrictForRoles = Arr::get($restriction, 'restrict_for_roles');
+            return collect($restrictForRoles)->some(fn($role) => User::current()->hasRole($role));
+        });
     }
 
 }
