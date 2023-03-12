@@ -69,8 +69,24 @@ class RestrictFields
 
     private function applyReadOnlyRestriction(array $item, Blueprint $blueprint)
     {
-        // TODO: Continue here. Seems like code runs up to this point
-        return;
+        // Use the contents clone to modify contents and later override original contents
+        $contents = $blueprint->contents();
+
+        // Loop through all sections to get the correct section handle
+        foreach ($blueprint->sections()->keys() as $sectionKey) {
+            if (!$blueprint->hasFieldInSection(Arr::get($item, 'handle'), $sectionKey)) {
+                continue;
+            }
+            // Loop through all fields in section to override the restricted field's visibility
+            foreach ($contents['sections'][$sectionKey]['fields'] as &$field) {
+                if (Arr::get($field, 'handle') === Arr::get($item, 'handle')) {
+                    $field['field']['visibility'] = 'read_only';
+                }
+            }
+        }
+
+        // Override modified contents in blueprint
+        $blueprint->setContents($contents);
     }
 
     private function applyHiddenRestriction(array $item, Blueprint $blueprint)
